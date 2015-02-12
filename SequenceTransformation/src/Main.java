@@ -8,22 +8,11 @@ import java.util.regex.Pattern;
 public class Main {
 
 	private static final String DELIM = " ";
-
-	private enum TranslateBinaryDigit {
-		ZERO('0'), ONE('1'), TRANSLATE_ZERO(Pattern.compile("A+")), TRANSLATE_ONE(
-				Pattern.compile("A+|B+"));
-
-		Pattern pattern;
-		char character;
-
-		private TranslateBinaryDigit(Pattern regexPattern) {
-			this.pattern = regexPattern;
-		}
-
-		private TranslateBinaryDigit(char character) {
-			this.character = character;
-		}
-	}
+	private static final char ZERO = '0';
+	private static final char ONE = '1';
+	private static final Pattern ZERO_TRANSLATE_PATTERN = Pattern.compile("A+");
+	private static final Pattern ONE_TRANSLATE_PATTERN = Pattern
+			.compile("A+|B+");
 
 	public static void main(String[] args) throws IOException {
 		File file = new File(args[0]);
@@ -41,11 +30,11 @@ public class Main {
 
 	private static void printTransformationPossible(String line) {
 		// Print true/false isTransormationPossible
-		System.out.println(isTransformationPossible(line));
+		System.out.println(isTransformationPossible(line) ? "Yes" : "No");
 
 	}
 
-	private static String isTransformationPossible(String line) {
+	private static boolean isTransformationPossible(String line) {
 		boolean isPossible = false;
 
 		String[] pair = line.split(DELIM);
@@ -75,19 +64,19 @@ public class Main {
 		// iterate text in binary representation
 		for (char binChar : pair[0].toCharArray()) {
 			search: for (String translationElement : translationList) {
-				if (binChar == TranslateBinaryDigit.ZERO.character) {
-					isPossible = TranslateBinaryDigit.TRANSLATE_ZERO.pattern
-							.matcher(translationElement).matches();
+				if (binChar == ZERO) {
+					isPossible = ZERO_TRANSLATE_PATTERN.matcher(
+							translationElement).matches();
 					break search;
-				} else if (binChar == TranslateBinaryDigit.ONE.character) {
-					isPossible = TranslateBinaryDigit.TRANSLATE_ONE.pattern
-							.matcher(translationElement).matches();
+				} else if (binChar == ONE) {
+					isPossible = ONE_TRANSLATE_PATTERN.matcher(
+							translationElement).matches();
 					break search;
 				}
 			}
 
 		}
 
-		return isPossible ? "Yes" : "No";
+		return isPossible;
 	}
 }
